@@ -1,11 +1,15 @@
+"use client"
+
 import { Badge } from '@/app/_components/ui/badge'
 import { Card, CardContent } from '@/app/_components/ui/card'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import dayjs from 'dayjs'
 import { Clock3 } from 'lucide-react'
+import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+
 
 // {
-//     "_id": "66a5227bd1d424f4a9072ff8",
+//     "_id": "66a522x7bd1d424f4a9072ff8",
 //     "user_id": "66a4f439442e898a54772234",
 //     "title": "Task - #001",
 //     "description": "Description 1",
@@ -18,10 +22,24 @@ import { Clock3 } from 'lucide-react'
 // }
 
 const TaskCard = ({ task }: any) => {
+    const ref = useRef<HTMLDivElement | null>(null);
+
+
+    useEffect(() => {
+        const el = ref.current;
+        if (el) {
+            return draggable({
+                element: el,
+                canDrag: () => true,
+                getInitialData: () => ({ ...task }),
+                onDragStart: () => { }
+            });
+        }
+    }, []);
 
 
     return (
-        <Card draggable className={`cursor-grab rounded`}>
+        <Card ref={ref} className={`cursor-grab rounded`}>
             <CardContent className="p-3 gap-2 flex flex-col text-[#606060] text-start bg-[#F9F9F9] rounded">
                 <div className="text-sm font-medium">{task.title}</div>
                 <div className="text-sm text-[#667085]">{task.description}</div>

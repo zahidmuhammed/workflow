@@ -1,11 +1,13 @@
+import { Toaster } from "./_components/ui/sonner";
+import "./globals.css";
+import Providers from "./providers";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Task Do",
+  title: "Workflow",
   description: "Efficient project management app for organizing tasks, tracking progress, and boosting productivity",
 };
 
@@ -16,7 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Providers>
+          {children}
+        </Providers>
+        <Toaster />
+      </body>
     </html>
   );
 }

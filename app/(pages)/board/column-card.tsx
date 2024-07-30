@@ -1,15 +1,26 @@
+"use client"
+
 import { ScrollArea } from '@/app/_components/ui/scroll-area'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import TaskCard from './task-card'
 import { Input } from '@/app/_components/ui/input'
 import { Button } from '@/app/_components/ui/button'
 import { PlusIcon, ChartNoAxesColumnIncreasing } from 'lucide-react'
 import TaskCreation from './task-creation'
+import axios from 'axios'
+import Urls from '@/app/_utils/urls'
+import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+
+
+
 
 const ColumnCard = ({ column }: any) => {
+
+    const ref = useRef<HTMLDivElement | null>(null);
+
     const tasks = [
         {
-            "_id": "66a5227bd1d424f4a9072ff8",
+            "_id": "66a5227bd1d424f4a9072fdf8",
             "user_id": "66a4f439442e898a54772234",
             "title": "Task - #001",
             "status": "todo",
@@ -22,7 +33,7 @@ const ColumnCard = ({ column }: any) => {
             "__v": 0
         },
         {
-            "_id": "66a5227bd1d424f4a9072ff8",
+            "_id": "66a5227bd1wd424f4a9072ff8",
             "user_id": "66a4f439442e898a54772234",
             "title": "Task - #002",
             "status": "in_progress",
@@ -35,7 +46,7 @@ const ColumnCard = ({ column }: any) => {
             "__v": 0
         },
         {
-            "_id": "66a5227bd1d424f4a9072ff8",
+            "_id": "66a5227bd1d424f4fa9072ff8",
             "user_id": "66a4f439442e898a54772234",
             "title": "Task - #003",
             "status": "done",
@@ -48,6 +59,19 @@ const ColumnCard = ({ column }: any) => {
 
     ]
 
+
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) {
+            throw new Error('ref not set correctly');
+        }
+
+        return dropTargetForElements({
+            element: el,
+            getData: () => ({})
+        });
+    }, []);
+
     return (
         <div className='text-center  min-w-[250px] w-[250px] mb-3' >
             <div className="flex justify-between items-center py-2 select-none">
@@ -57,7 +81,7 @@ const ColumnCard = ({ column }: any) => {
                 </div>
             </div>
 
-            <ScrollArea className="h-[calc(100vh-240px)]">
+            <ScrollArea className="h-[calc(100vh-350px)]" ref={ref}>
                 <div className="flex flex-col py-2 gap-3">
                     {tasks.map((task) => (
                         <TaskCard key={task._id} task={task} />

@@ -1,4 +1,6 @@
-import React from 'react'
+"use client"
+
+import React, { useEffect } from 'react'
 import ColumnCard from './column-card'
 import { cn } from '@/app/_utils/utils'
 import Image from 'next/image';
@@ -13,9 +15,33 @@ import {
 } from "lucide-react"
 import Layout from '@/app/_components/layout';
 import TaskCreation from './task-creation';
+import axios from 'axios';
+import Urls from '@/app/_utils/urls';
+import { ElementDragPayload, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types';
+
+
+// async function getData() {
+//     try {
+//         const res = await axios.get(Urls.baseUrl + Urls.tasks, {
+//             headers: {
+//                 "Authorization": `Bearer ${localStorage.getItem("workflow_token")}`
+//             }
+//         })
+//         return res
+//     } catch (error) {
+//         console.log("error : ", error)
+//     }
+// }
 
 
 const Board = () => {
+
+    // const data = await getData();
+
+    // console.log("data : ", data)
+    // console.log("data emp: ")
+
 
 
     const taskColumns = [
@@ -24,6 +50,22 @@ const Board = () => {
         { _id: 3, title: 'Under Review', code: 'under_review', order: 3 },
         { _id: 4, title: 'Completed', code: 'completed', order: 4 },
     ]
+
+
+    const updateTaskStatus = (source: ElementDragPayload, location: DragLocationHistory) => {
+        console.log("source : ", source)
+        console.log("location : ", location)
+    }
+    /*  ######################################################################################## */
+
+    useEffect(() => {
+        return monitorForElements({
+            onDragStart: () => { },
+            onDrop: ({ source, location }) => { updateTaskStatus(source, location) }
+        });
+    }, []);
+
+    /*  ######################################################################################## */
 
     return (
         <Layout content={
@@ -113,5 +155,7 @@ const Board = () => {
         } />
     )
 }
+
+
 
 export default Board

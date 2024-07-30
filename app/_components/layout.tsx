@@ -31,7 +31,7 @@ const Layout = ({ content }: LayoutProps) => {
     const navigate = useRouter();
 
     const handleLogout = () => {
-        localStorage.removeItem('token')
+        localStorage.removeItem('workflow_token')
         navigate.push('/login')
     }
 
