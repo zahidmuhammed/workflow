@@ -19,21 +19,15 @@ import Image from 'next/image';
 import { Input } from './ui/input';
 import TaskCreation from '../(pages)/board/task-creation';
 import { useRouter } from 'next/navigation';
+import LogoutBtn from './logout-btn';
 
-interface LayoutProps {
+interface LayoutProp {
     content: React.ReactNode;
 }
 
-const Layout = ({ content }: LayoutProps) => {
+const LayoutWrapper = ({ content }: LayoutProp) => {
 
     const [isCollapsed, setIsCollapsed] = useState(false);
-
-    const navigate = useRouter();
-
-    const handleLogout = () => {
-        localStorage.removeItem('workflow_token')
-        navigate.push('/login')
-    }
 
     return (
         <div className='h-full'>
@@ -86,9 +80,7 @@ const Layout = ({ content }: LayoutProps) => {
                                         </Button>
                                     </div>
                                     <div className='flex items-center gap-2'>
-                                        <Button onClick={handleLogout} variant={"secondary"} className='bg-[#F4F4F4]' size={"sm"}>
-                                            Logout
-                                        </Button>
+                                        <LogoutBtn />
                                     </div>
                                 </div>
                             </div>
@@ -172,4 +164,4 @@ const Layout = ({ content }: LayoutProps) => {
     )
 }
 
-export default Layout
+export default LayoutWrapper

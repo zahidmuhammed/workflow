@@ -13,7 +13,7 @@ import {
     Filter,
     Share2
 } from "lucide-react"
-import Layout from '@/app/_components/layout';
+import LayoutWrapper from '@/app/_components/layoutWrapper';
 import TaskCreation from './task-creation';
 import axios from 'axios';
 import Urls from '@/app/_utils/urls';
@@ -68,7 +68,7 @@ const Board = () => {
     /*  ######################################################################################## */
 
     return (
-        <Layout content={
+        <LayoutWrapper content={
             <div className='bg-[#F7F7F7] flex flex-col gap-4 h-screen'>
                 <div className='flex items-center  justify-between mt-6 h-14 ml-4 mr-8'>
                     <div className='text-4xl font-semibold'>

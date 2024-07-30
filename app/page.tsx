@@ -1,11 +1,11 @@
 import Dummy from "./_components/dummy";
-import Layout from "./_components/layout";
+import LayoutWrapper from "./_components/layoutWrapper";
 
 export default function Home() {
 
   return (
     <main className="h-screen">
-      <Layout content={<div className="w-full h-screen flex justify-center items-center">
+      <LayoutWrapper content={<div className="w-full h-screen flex justify-center items-center">
         <Dummy />
       </div>} />
     </main>
