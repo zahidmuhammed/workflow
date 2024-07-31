@@ -1,14 +1,10 @@
-"use client"
 
-import React, { useEffect } from 'react'
-import ColumnCard from './column-card'
-import { cn } from '@/app/_utils/utils'
+import React from 'react'
 import Image from 'next/image';
 import { Input } from '@/app/_components/ui/input';
 import { Button } from '@/app/_components/ui/button';
 import {
-    ChartLine, House, BellDot, ChevronsRightIcon, ArrowDownToLine,
-    Users, Settings, SquareKanban, CirclePlus, Sun, CircleHelp, Sparkles,
+    CirclePlus, CircleHelp, Sparkles,
     Calendar,
     Filter,
     Share2
@@ -17,53 +13,38 @@ import LayoutWrapper from '@/app/_components/layoutWrapper';
 import TaskCreation from './task-creation';
 import axios from 'axios';
 import Urls from '@/app/_utils/urls';
-import { ElementDragPayload, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types';
+import Greetings from '@/app/_components/greetings';
+import BoardWrapper from './board-wrapper';
 
 
-// async function getData() {
-//     try {
-//         const res = await axios.get(Urls.baseUrl + Urls.tasks, {
-//             headers: {
-//                 "Authorization": `Bearer ${localStorage.getItem("workflow_token")}`
-//             }
-//         })
-//         return res
-//     } catch (error) {
-//         console.log("error : ", error)
-//     }
-// }
+async function getData() {
+    try {
+        if (typeof window === 'undefined') {
+            // We're on the server side, so we can't use localStorage
+            console.log("Cannot access localStorage on server side");
+            return null;
+        }
 
+        const token = localStorage.getItem("workflow_token");
+        if (!token) {
+            console.log("No token found in localStorage");
+            return null;
+        }
 
-const Board = () => {
-
-    // const data = await getData();
-
-    // console.log("data : ", data)
-    // console.log("data emp: ")
-
-
-
-    const taskColumns = [
-        { _id: 1, title: 'To-Do', code: 'todo', order: 1 },
-        { _id: 2, title: 'In Progress', code: 'in_progress', order: 2 },
-        { _id: 3, title: 'Under Review', code: 'under_review', order: 3 },
-        { _id: 4, title: 'Completed', code: 'completed', order: 4 },
-    ]
-
-
-    const updateTaskStatus = (source: ElementDragPayload, location: DragLocationHistory) => {
-        console.log("source : ", source)
-        console.log("location : ", location)
-    }
-    /*  ######################################################################################## */
-
-    useEffect(() => {
-        return monitorForElements({
-            onDragStart: () => { },
-            onDrop: ({ source, location }) => { updateTaskStatus(source, location) }
+        const res = await axios.get(Urls.baseUrl + Urls.tasks, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
         });
-    }, []);
+        return res;
+    } catch (error) {
+        console.log("error : ", error);
+        return null;
+    }
+}
+
+
+const Board = async () => {
 
     /*  ######################################################################################## */
 
@@ -71,14 +52,7 @@ const Board = () => {
         <LayoutWrapper content={
             <div className='bg-[#F7F7F7] flex flex-col gap-4 h-screen'>
                 <div className='flex items-center  justify-between mt-6 h-14 ml-4 mr-8'>
-                    <div className='text-4xl font-semibold'>
-                        {(() => {
-                            const hour = new Date().getHours();
-                            if (hour < 12) return "Good morning";
-                            if (hour < 18) return "Good afternoon";
-                            return "Good evening";
-                        })()}, Joe!
-                    </div>
+                    <Greetings />
                     <div className='text-base flex items-center gap-2'>Help & feedback <CircleHelp className='size-4' /></div>
                 </div>
 
@@ -142,15 +116,7 @@ const Board = () => {
 
                     </div>
                 </div>
-
-
-                <div className={cn("flex overflow-auto ml-4 mr-6 rounded-lg bg-white")}>
-                    {taskColumns.map((column) => (
-                        <div key={column._id} className='first:pl-4 px-2 last:pr-4'>
-                            <ColumnCard key={column._id} column={column} />
-                        </div>
-                    ))}
-                </div>
+                <BoardWrapper />
             </div>
         } />
     )

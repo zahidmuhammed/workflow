@@ -50,7 +50,8 @@ const store = configureStore({
                             request: axios.interceptors.request.use(
                                 config => {
                                     const tokenLessApis = ["/login", "/signup"];
-                                    const token = localStorage.getItem("token");
+                                    const token =
+                                        localStorage.getItem("workflow_token");
                                     if (
                                         token &&
                                         config.url &&

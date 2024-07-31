@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from "react";
 import {
     ChartLine, House, BellDot, ChevronsRightIcon, ArrowDownToLine,
@@ -20,6 +20,7 @@ import { Input } from './ui/input';
 import TaskCreation from '../(pages)/board/task-creation';
 import { useRouter } from 'next/navigation';
 import LogoutBtn from './logout-btn';
+import { useAppSelector } from '../_utils/hooks';
 
 interface LayoutProp {
     content: React.ReactNode;
@@ -28,6 +29,13 @@ interface LayoutProp {
 const LayoutWrapper = ({ content }: LayoutProp) => {
 
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const { name } = useAppSelector((state) => state.user)
+
+    const [isClient, setIsClient] = useState(false)
+
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
 
     return (
         <div className='h-full'>
@@ -60,12 +68,12 @@ const LayoutWrapper = ({ content }: LayoutProp) => {
                                     isCollapsed ? "h-[80px]" : "px-3"
                                 )}
                             >
-                                <div className='flex items-center gap-2 text-xl'>
+                                <div className='flex items-center gap-2 text-xl' >
                                     <Avatar className='rounded-lg size-8 mx-1'>
                                         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                                         <AvatarFallback>-</AvatarFallback>
                                     </Avatar>
-                                    Joe Gardner
+                                    {isClient && name}
                                 </div>
                                 <div className='flex items-center justify-between gap-2'>
                                     <div className='flex items-center'>
