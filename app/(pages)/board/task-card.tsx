@@ -8,6 +8,16 @@ import { Clock3 } from 'lucide-react'
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { Task } from './board-wrapper'
 
+const getTimeAgo = (date: string | Date) => {
+    const now = dayjs()
+    const updatedAt = dayjs(date)
+    const diffSeconds = now.diff(updatedAt, 'second')
+
+    if (diffSeconds < 60) return `${diffSeconds} seconds ago`
+    if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)} minutes ago`
+    if (diffSeconds < 86400) return `${Math.floor(diffSeconds / 3600)} hours ago`
+    return `${Math.floor(diffSeconds / 86400)} days ago`
+}
 
 const TaskCard = ({ task }: { task: Task }) => {
     const ref = useRef<HTMLDivElement | null>(null);
@@ -47,9 +57,7 @@ const TaskCard = ({ task }: { task: Task }) => {
                     </div>
                 }
                 <div className="text-xs font-medium text-[#667085]">
-                    {dayjs().diff(dayjs(task.updatedAt), 'hour') < 24
-                        ? `${dayjs().diff(dayjs(task.updatedAt), 'hour')} hours ago`
-                        : `${dayjs().diff(dayjs(task.updatedAt), 'day')} days ago`}
+                    {getTimeAgo(task.updatedAt)}
                 </div>
             </CardContent>
         </Card>

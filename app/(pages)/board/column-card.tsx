@@ -3,61 +3,20 @@
 import { ScrollArea } from '@/app/_components/ui/scroll-area'
 import React, { useEffect, useRef } from 'react'
 import TaskCard from './task-card'
-import { Input } from '@/app/_components/ui/input'
 import { Button } from '@/app/_components/ui/button'
 import { PlusIcon, ChartNoAxesColumnIncreasing } from 'lucide-react'
 import TaskCreation from './task-creation'
-import axios from 'axios'
-import Urls from '@/app/_utils/urls'
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { Column, Task } from './board-wrapper'
 
+interface ColumnCardProps {
+    column: Column
+    tasks: Task[]
+}
 
-
-
-const ColumnCard = ({ column, tasks }: any) => {
+const ColumnCard = ({ column, tasks }: ColumnCardProps) => {
 
     const ref = useRef<HTMLDivElement | null>(null);
-
-    // const tasks = [
-    //     {
-    //         "_id": "66a5227bd1d424f4a9072fdf8",
-    //         "user_id": "66a4f439442e898a54772234",
-    //         "title": "Task - #001",
-    //         "status": "todo",
-    //         "is_deleted": false,
-    //         "priority": "low",
-    //         "description": "Description 1",
-    //         "createdAt": "2024-07-27T16:38:19.128Z",
-    //         "updatedAt": "2024-07-29T16:43:46.836Z",
-    //         "deadline": "2024-07-30T16:43:46.836Z",
-    //         "__v": 0
-    //     },
-    //     {
-    //         "_id": "66a5227bd1wd424f4a9072ff8",
-    //         "user_id": "66a4f439442e898a54772234",
-    //         "title": "Task - #002",
-    //         "status": "in_progress",
-    //         "is_deleted": false,
-    //         "priority": "medium",
-    //         "description": "Description 2",
-    //         "createdAt": "2024-07-27T16:38:19.128Z",
-    //         "updatedAt": "2024-07-27T16:43:46.836Z",
-    //         "deadline": "2024-07-27T16:43:46.836Z",
-    //         "__v": 0
-    //     },
-    //     {
-    //         "_id": "66a5227bd1d424f4fa9072ff8",
-    //         "user_id": "66a4f439442e898a54772234",
-    //         "title": "Task - #003",
-    //         "status": "done",
-    //         "is_deleted": false,
-    //         "priority": "urgent",
-    //         "description": "Description 3",
-    //         "createdAt": "2024-07-27T16:38:19.128Z",
-    //         "updatedAt": "2024-07-27T16:43:46.836Z",
-    //     }
-
-    // ]
 
 
     useEffect(() => {
@@ -88,14 +47,17 @@ const ColumnCard = ({ column, tasks }: any) => {
                     ))}
 
 
-                    <TaskCreation button={
-                        <Button>
-                            <div className='flex items-center justify-between w-full '>
-                                Add New
-                                <PlusIcon className='w-4 h-4' />
-                            </div>
-                        </Button>
-                    } />
+                    <TaskCreation
+                        button={
+                            <Button>
+                                <div className='flex items-center justify-between w-full '>
+                                    Add New
+                                    <PlusIcon className='w-4 h-4' />
+                                </div>
+                            </Button>
+                        }
+                        defaultStatus={column?.code}
+                    />
                 </div>
             </ScrollArea>
 

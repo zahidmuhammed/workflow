@@ -7,6 +7,8 @@ import { ElementDragPayload, monitorForElements } from '@atlaskit/pragmatic-drag
 import { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types';
 import axios from 'axios';
 import Urls from '@/app/_utils/urls';
+import { initTasks } from '@/app/_redux/slices/tasksSlice';
+import { useAppDispatch, useAppSelector } from '@/app/_utils/hooks';
 
 export interface Task {
     _id: string;
@@ -22,30 +24,45 @@ export interface Task {
     status: "todo" | "in_progress" | "review" | "completed";
 }
 
+
+export interface Column {
+    _id: number;
+    title: string;
+    code: string;
+    order: number;
+}
+
 const BoardWrapper = () => {
 
-    const taskColumns = [
+    const dispatch = useAppDispatch();
+    const tasksList = useAppSelector((state) => state.tasks);
+
+    const taskColumns: Column[] = [
         { _id: 1, title: 'To-Do', code: 'todo', order: 1 },
         { _id: 2, title: 'In Progress', code: 'in_progress', order: 2 },
         { _id: 3, title: 'Under Review', code: 'review', order: 3 },
         { _id: 4, title: 'Completed', code: 'completed', order: 4 },
     ]
 
-    const [tasks, setTasks] = useState<Task[]>([])
-
-
-    const updateTaskStatus = (source: ElementDragPayload, location: DragLocationHistory) => {
-        console.log("source : ", source)
-        console.log("location : ", location)
-    }
-
     const getTasks = async () => {
         const res = await axios.get(Urls.domain + "/api" + Urls.tasks)
-        setTasks(res?.data?.data || [])
+        dispatch(initTasks(res?.data?.data || []))
     }
 
+    const updateTaskStatus = async (source: ElementDragPayload, location: DragLocationHistory) => {
+
+        if (source?.data?.status === location?.current?.dropTargets?.[0]?.data?.code) return;
+
+        const res = await axios.patch(Urls.domain + "/api" + Urls.tasks + "/" + source?.data?._id,
+            { status: location?.current?.dropTargets?.[0]?.data?.code })
+        if (res?.status === 200) {
+            getTasks()
+        }
+    }
+
+
     const getTasksByStatus = (status: string) => {
-        return tasks?.filter((task) =>
+        return tasksList?.filter((task) =>
             task?.status === status);
     };
 

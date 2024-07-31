@@ -24,24 +24,47 @@ import { useForm } from "react-hook-form";
 import axios from 'axios'
 import Urls from '@/app/_utils/urls'
 import { toast } from 'sonner'
+import { useAppDispatch } from '@/app/_utils/hooks'
+import { initTasks } from '@/app/_redux/slices/tasksSlice'
 
 
-const TaskCreation = ({ button = <Button variant="outline">Open</Button> }: any) => {
+interface TaskCreationProps {
+    button?: React.ReactNode;
+    defaultStatus?: string;
+}
+
+const TaskCreation = ({ button = <Button variant="outline">Open</Button>, defaultStatus }: TaskCreationProps) => {
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState<Date>()
 
-    const { register, handleSubmit, getValues, formState: { errors }, setValue } = useForm();
+    const dispatch = useAppDispatch();
+
+    interface TaskCreationForm {
+        title: string;
+        status: string;
+        priority?: string;
+        deadline?: Date;
+        description?: string;
+    }
+
+    const { register, handleSubmit, getValues, formState: { errors }, setValue } = useForm<Partial<TaskCreationForm>>({
+        defaultValues: {
+            status: defaultStatus
+        }
+    });
+
+    const getTasks = async () => {
+        const res = await axios.get(Urls.domain + "/api" + Urls.tasks)
+        dispatch(initTasks(res?.data?.data || []))
+    }
 
     const handleCreation = async (data: any) => {
         try {
-            const response = await axios.post(Urls.baseUrl + Urls.tasks, data, {
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("workflow_token")}`
-                }
-            });
+            const response = await axios.post(Urls.baseUrl + Urls.tasks, data);
             if (response.status === 201) {
                 toast.success("Task created successfully");
                 setOpen(false);
+                getTasks()
             }
         } catch (error) {
             console.log(error)
@@ -81,7 +104,7 @@ const TaskCreation = ({ button = <Button variant="outline">Open</Button> }: any)
                             <div className='w-1/2 flex items-center gap-2'>
                                 <Sun className='size-4' />Status</div>
                             <div className='w-1/2'>
-                                <Select required onValueChange={(value) => setValue("status", value)}>
+                                <Select required value={getValues("status")} onValueChange={(value) => setValue("status", value)}>
                                     <SelectTrigger className="w-[280px] placeholder:text-[#CCCCCC] text-xs">
                                         <SelectValue placeholder="Not Selected" />
                                     </SelectTrigger>
@@ -117,9 +140,9 @@ const TaskCreation = ({ button = <Button variant="outline">Open</Button> }: any)
                                 <Calendar className='size-4' />Deadline
                             </div>
                             <div>
-                                <DatePicker date={date} setDate={(date) => {
-                                    setDate(date)
-                                    setValue("deadline", date)
+                                <DatePicker date={date} setDate={(date: any) => {
+                                    setDate(date);
+                                    setValue("deadline", date);
                                 }} />
                             </div>
                             <div className='align-top flex h-full gap-2 pt-2'>
