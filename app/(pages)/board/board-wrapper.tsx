@@ -7,7 +7,7 @@ import { ElementDragPayload, monitorForElements } from '@atlaskit/pragmatic-drag
 import { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types';
 import axios from 'axios';
 import Urls from '@/app/_utils/urls';
-import { initTasks } from '@/app/_redux/slices/tasksSlice';
+import { initTasks, updateTaskStatus } from '@/app/_redux/slices/tasksSlice';
 import { useAppDispatch, useAppSelector } from '@/app/_utils/hooks';
 
 export interface Task {
@@ -49,15 +49,20 @@ const BoardWrapper = () => {
         dispatch(initTasks(res?.data?.data || []))
     }
 
-    const updateTaskStatus = async (source: ElementDragPayload, location: DragLocationHistory) => {
+    const handleStatusChange = async (source: ElementDragPayload, location: DragLocationHistory) => {
 
         if (source?.data?.status === location?.current?.dropTargets?.[0]?.data?.code) return;
 
+        dispatch(updateTaskStatus({
+            _id: source?.data?._id as string,
+            status: location?.current?.dropTargets?.[0]?.data?.code as "todo" | "in_progress" | "review" | "completed"
+        }))
+
         const res = await axios.patch(Urls.domain + "/api" + Urls.tasks + "/" + source?.data?._id,
             { status: location?.current?.dropTargets?.[0]?.data?.code })
-        if (res?.status === 200) {
-            getTasks()
-        }
+        // if (res?.status === 200) {
+        //     getTasks()
+        // }
     }
 
 
@@ -70,7 +75,7 @@ const BoardWrapper = () => {
         getTasks()
         return monitorForElements({
             onDragStart: () => { },
-            onDrop: ({ source, location }) => { updateTaskStatus(source, location) }
+            onDrop: ({ source, location }) => handleStatusChange(source, location)
         });
     }, []);
 
@@ -78,7 +83,7 @@ const BoardWrapper = () => {
         <div className={cn("flex overflow-auto ml-4 mr-6 rounded-lg bg-white")}>
             {taskColumns.map((column) => (
                 <div key={column._id} className='first:pl-4 px-2 last:pr-4'>
-                    <ColumnCard key={column._id} column={column} tasks={getTasksByStatus(column?.code) || []} />
+                    <ColumnCard key={column._id} column={column} tasks={getTasksByStatus(column?.code) as Task[] || []} />
                 </div>
             ))}
         </div>

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { Task } from "@/app/(pages)/board/board-wrapper";
 
-const initialState: Task[] = [];
+const initialState: Partial<Task>[] = [];
 
 export const taskSlice = createSlice({
     name: "tasks",
@@ -11,7 +11,15 @@ export const taskSlice = createSlice({
         addTask: (state, action: PayloadAction<Task>) => {
             state.push(action.payload);
         },
-        deleteTask: (state, action: PayloadAction<Task>) => {
+        updateTaskStatus: (state, action: PayloadAction<Partial<Task>>) => {
+            const index = state.findIndex(
+                task => task._id === action.payload._id
+            );
+            if (index !== -1) {
+                state[index].status = action.payload.status;
+            }
+        },
+        deleteTask: (state, action: PayloadAction<Partial<Task>>) => {
             return state.filter(task => task._id !== action.payload._id);
         },
         initTasks: (state, action: PayloadAction<Task[]>) => {
@@ -23,6 +31,7 @@ export const taskSlice = createSlice({
     },
 });
 
-export const { addTask, deleteTask, initTasks, clearTasks } = taskSlice.actions;
+export const { addTask, deleteTask, initTasks, clearTasks, updateTaskStatus } =
+    taskSlice.actions;
 
 export default taskSlice.reducer;
