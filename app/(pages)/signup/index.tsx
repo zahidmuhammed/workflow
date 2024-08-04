@@ -1,17 +1,18 @@
 'use client'
 
-import { Button } from '@/app/_components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/app/_components/ui/card'
-import { Input } from '@/app/_components/ui/input'
+import axios from 'axios'
+import Link from 'next/link'
+import { toast } from 'sonner'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 
 import Urls from '@/app/_utils/urls'
-import axios from 'axios'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import { Input } from '@/app/_components/ui/input'
+import { Button } from '@/app/_components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/app/_components/ui/card'
+
 
 const SignupClient = () => {
 

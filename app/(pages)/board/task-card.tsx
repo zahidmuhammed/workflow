@@ -1,12 +1,20 @@
 "use client"
 
-import { Badge } from '@/app/_components/ui/badge'
-import { Card, CardContent } from '@/app/_components/ui/card'
-import React, { useEffect, useRef } from 'react'
+import axios from 'axios'
 import dayjs from 'dayjs'
-import { Clock3 } from 'lucide-react'
+import { toast } from 'sonner'
+import React, { useEffect, useRef } from 'react'
+import { Clock3, PencilIcon, Trash2Icon } from 'lucide-react'
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+
+import Urls from '@/app/_utils/urls'
 import { Task } from './board-wrapper'
+import TaskCreation from './task-creation'
+import { Badge } from '@/app/_components/ui/badge'
+import { useAppDispatch } from '@/app/_utils/hooks'
+import AlertWrap from '@/app/_components/alert-wrap'
+import { Card, CardContent } from '@/app/_components/ui/card'
+import { deleteTask, initTasks } from '@/app/_redux/slices/tasksSlice'
 
 const getTimeAgo = (date: string | Date) => {
     const now = dayjs()
@@ -21,7 +29,27 @@ const getTimeAgo = (date: string | Date) => {
 
 const TaskCard = ({ task }: { task: Task }) => {
     const ref = useRef<HTMLDivElement | null>(null);
+    const dispatch = useAppDispatch()
 
+    /* ######################################################################################### */
+
+    const getTasks = async () => {
+        const res = await axios.get(Urls.domain + "/api" + Urls.tasks)
+        dispatch(initTasks(res?.data?.data || []))
+    }
+
+    const handleDelete = async () => {
+        try {
+            const response = await axios.delete(Urls.baseUrl + '/tasks/' + task._id)
+            if (response.status === 200) {
+                toast.success("Task deleted successfully")
+                dispatch(deleteTask(task))
+                getTasks()
+            }
+        } catch (error) {
+            toast.error("Error deleting task")
+        }
+    }
 
     useEffect(() => {
         const el = ref.current;
@@ -34,6 +62,9 @@ const TaskCard = ({ task }: { task: Task }) => {
             });
         }
     }, []);
+
+    /* ######################################################################################### */
+
 
 
     return (
@@ -53,11 +84,35 @@ const TaskCard = ({ task }: { task: Task }) => {
                 </Badge>}
                 {task?.deadline &&
                     <div className="text-xs font-semibold flex items-center text-[#667085]">
-                        <Clock3 className='w-5 h-5 mr-2' />{dayjs(task.deadline).format('DD-MM-YYYY')}
+                        <Clock3 className='w-4 h-4 mr-2' />{dayjs(task.deadline).format('DD-MM-YYYY')}
                     </div>
                 }
                 <div className="text-xs font-medium text-[#667085]">
-                    {getTimeAgo(task.updatedAt)}
+                    <div className="flex  justify-between items-center">
+                        {getTimeAgo(task.updatedAt)}
+                        <div className='flex gap-3'>
+                            <TaskCreation
+                                button={
+                                    <PencilIcon className='w-3 h-3 cursor-pointer' />
+                                }
+                                defaultData={{
+                                    _id: task?._id,
+                                    title: task?.title,
+                                    status: task?.status,
+                                    priority: task?.priority,
+                                    deadline: task?.deadline,
+                                    description: task?.description
+                                }}
+                                isEdit={true}
+                            />
+                            <AlertWrap
+                                title="Are you sure?"
+                                onAction={handleDelete}
+                                description="This action cannot be undone."
+                                button={<Trash2Icon className='w-3 h-3 cursor-pointer' />}
+                            />
+                        </div>
+                    </div>
                 </div>
             </CardContent>
         </Card>

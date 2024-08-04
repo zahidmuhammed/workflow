@@ -1,6 +1,5 @@
 import axios from "axios";
 import Urls from "../_utils/urls";
-// import storage from "redux-persist/lib/storage";
 import { configureStore } from "@reduxjs/toolkit";
 import { RootReducer, whitelistReducers } from "./reducers";
 import { persistStore, persistReducer } from "redux-persist";

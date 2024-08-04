@@ -1,16 +1,15 @@
 "use client"
 
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
 import { useAppSelector } from '../_utils/hooks';
+import React, { useEffect, useState } from 'react'
 
 const Greetings = () => {
 
+    const router = useRouter()
+    const [isClient, setIsClient] = useState(false)
     const { name } = useAppSelector((state) => state.user)
 
-    const router = useRouter()
-
-    const [isClient, setIsClient] = useState(false)
 
     useEffect(() => {
         setIsClient(true)

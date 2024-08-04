@@ -1,26 +1,20 @@
 "use client";
 
-import React, { useEffect } from 'react'
-import { useState } from "react";
+import React, { useEffect, useState } from 'react'
 import {
     ChartLine, House, BellDot, ChevronsRightIcon, ArrowDownToLine,
-    Users, Settings, SquareKanban, CirclePlus, Sun, CircleHelp, Sparkles,
-    Calendar,
-    Filter,
-    Share2
+    Users, Settings, SquareKanban, CirclePlus, Sun,
 } from "lucide-react"
+
 import { Nav } from './nav';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/app/_components/ui/resizable';
-import { Separator } from './ui/separator';
 import { cn } from '../_utils/utils';
-import { Button } from './ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import Image from 'next/image';
-import { Input } from './ui/input';
-import TaskCreation from '../(pages)/board/task-creation';
-import { useRouter } from 'next/navigation';
 import LogoutBtn from './logout-btn';
+import { Button } from './ui/button';
+import { Separator } from './ui/separator';
 import { useAppSelector } from '../_utils/hooks';
+import TaskCreation from '../(pages)/board/task-creation';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/app/_components/ui/resizable';
 
 interface LayoutProp {
     content: React.ReactNode;

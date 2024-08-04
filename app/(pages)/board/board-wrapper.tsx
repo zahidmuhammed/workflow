@@ -1,14 +1,15 @@
 "use client"
 
-import { cn } from '@/app/_utils/utils'
-import React, { useEffect, useState } from 'react'
-import ColumnCard from './column-card'
+import axios from 'axios';
+import React, { useEffect } from 'react'
 import { ElementDragPayload, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types';
-import axios from 'axios';
+
 import Urls from '@/app/_utils/urls';
-import { initTasks, updateTaskStatus } from '@/app/_redux/slices/tasksSlice';
+import ColumnCard from './column-card'
+import { cn } from '@/app/_utils/utils'
 import { useAppDispatch, useAppSelector } from '@/app/_utils/hooks';
+import { initTasks, updateTaskStatus } from '@/app/_redux/slices/tasksSlice';
 
 export interface Task {
     _id: string;
@@ -44,6 +45,9 @@ const BoardWrapper = () => {
         { _id: 4, title: 'Completed', code: 'completed', order: 4 },
     ]
 
+    /*  ######################################################################################## */
+
+
     const getTasks = async () => {
         const res = await axios.get(Urls.domain + "/api" + Urls.tasks)
         dispatch(initTasks(res?.data?.data || []))
@@ -60,16 +64,16 @@ const BoardWrapper = () => {
 
         const res = await axios.patch(Urls.domain + "/api" + Urls.tasks + "/" + source?.data?._id,
             { status: location?.current?.dropTargets?.[0]?.data?.code })
-        // if (res?.status === 200) {
-        //     getTasks()
-        // }
-    }
 
+    }
 
     const getTasksByStatus = (status: string) => {
         return tasksList?.filter((task) =>
             task?.status === status);
     };
+
+
+    /*  ######################################################################################## */
 
     useEffect(() => {
         getTasks()
@@ -79,8 +83,11 @@ const BoardWrapper = () => {
         });
     }, []);
 
+    /*  ######################################################################################## */
+
+
     return (
-        <div className={cn("flex overflow-auto ml-4 mr-6 rounded-lg bg-white")}>
+        <div className={cn("flex overflow-auto ml-4 mr-8 rounded-lg bg-white")}>
             {taskColumns.map((column) => (
                 <div key={column._id} className='first:pl-4 px-2 last:pr-4'>
                     <ColumnCard key={column._id} column={column} tasks={getTasksByStatus(column?.code) as Task[] || []} />

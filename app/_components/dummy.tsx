@@ -1,11 +1,11 @@
 "use client"
 
-import React, { useEffect } from 'react'
-import { useAppSelector, useAppDispatch } from '@/app/_utils/hooks'
-import { Button } from './ui/button'
-import { increment, decrement } from '../_redux/slices/counterSlice'
-import axios from 'axios'
+import React from 'react'
 import { MinusIcon, PlusIcon } from 'lucide-react'
+
+import { Button } from './ui/button'
+import { useAppSelector, useAppDispatch } from '@/app/_utils/hooks'
+import { increment, decrement } from '@/app/_redux/slices/counterSlice'
 
 const Dummy = () => {
 

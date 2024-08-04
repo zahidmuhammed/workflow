@@ -1,13 +1,14 @@
 "use client"
 
-import { ScrollArea } from '@/app/_components/ui/scroll-area'
 import React, { useEffect, useRef } from 'react'
-import TaskCard from './task-card'
-import { Button } from '@/app/_components/ui/button'
 import { PlusIcon, ChartNoAxesColumnIncreasing } from 'lucide-react'
-import TaskCreation from './task-creation'
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+
+import TaskCard from './task-card'
+import TaskCreation from './task-creation'
 import { Column, Task } from './board-wrapper'
+import { Button } from '@/app/_components/ui/button'
+import { ScrollArea } from '@/app/_components/ui/scroll-area'
 
 interface ColumnCardProps {
     column: Column
@@ -40,7 +41,7 @@ const ColumnCard = ({ column, tasks }: ColumnCardProps) => {
                 </div>
             </div>
 
-            <ScrollArea className="h-[calc(100vh-350px)]" ref={ref}>
+            <ScrollArea className="h-[calc(100vh-350px)]" showScrollBar={false} ref={ref}>
                 <div className="flex flex-col py-2 gap-3">
                     {tasks.map((task: any) => (
                         <TaskCard key={task._id} task={task} />
@@ -56,7 +57,9 @@ const ColumnCard = ({ column, tasks }: ColumnCardProps) => {
                                 </div>
                             </Button>
                         }
-                        defaultStatus={column?.code}
+                        defaultData={{
+                            status: column?.code,
+                        }}
                     />
                 </div>
             </ScrollArea>

@@ -1,55 +1,65 @@
 "use client"
 
-import React, { useState } from 'react'
-import { Button } from "@/app/_components/ui/button"
-import { Input } from "@/app/_components/ui/input"
-import { Label } from "@/app/_components/ui/label"
+import axios from 'axios'
+import { toast } from 'sonner'
+import React, { useEffect, useState } from 'react'
+import { useForm } from "react-hook-form";
+import { Calendar, MoveDiagonal2, OctagonAlert, PencilIcon, PlusIcon, Share2, Star, Sun, X } from 'lucide-react'
+
 import {
     Sheet,
-    SheetClose,
     SheetContent,
     SheetDescription,
-    SheetFooter,
-    SheetHeader,
     SheetTitle,
     SheetTrigger,
 } from "@/app/_components/ui/sheet"
-import { Calendar, MoveDiagonal2, OctagonAlert, PencilIcon, PlusIcon, Share2, Star, Sun, X } from 'lucide-react'
+import Urls from '@/app/_utils/urls'
+import { Input } from "@/app/_components/ui/input"
+import { useAppDispatch } from '@/app/_utils/hooks'
+import { Button } from "@/app/_components/ui/button"
 import { Textarea } from '@/app/_components/ui/textarea'
+import { initTasks } from '@/app/_redux/slices/tasksSlice'
+import { Separator } from '@/app/_components/ui/separator'
 import { DatePicker } from '@/app/_components/ui/date-picker'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/app/_components/ui/select'
-import { Separator } from '@/app/_components/ui/separator'
-
-import { useForm } from "react-hook-form";
-import axios from 'axios'
-import Urls from '@/app/_utils/urls'
-import { toast } from 'sonner'
-import { useAppDispatch } from '@/app/_utils/hooks'
-import { initTasks } from '@/app/_redux/slices/tasksSlice'
-
 
 interface TaskCreationProps {
     button?: React.ReactNode;
-    defaultStatus?: string;
-}
-
-const TaskCreation = ({ button = <Button variant="outline">Open</Button>, defaultStatus }: TaskCreationProps) => {
-    const [open, setOpen] = useState(false);
-    const [date, setDate] = useState<Date>()
-
-    const dispatch = useAppDispatch();
-
-    interface TaskCreationForm {
-        title: string;
-        status: string;
+    defaultData?: {
+        _id?: string;
+        title?: string;
+        status?: string;
         priority?: string;
         deadline?: Date;
         description?: string;
-    }
+    };
+    isEdit?: boolean;
+}
+
+interface TaskCreationForm {
+    title: string;
+    status: string;
+    priority?: string;
+    deadline?: Date;
+    description?: string;
+}
+
+const TaskCreation = ({ button = <Button variant="outline">Open</Button>, defaultData, isEdit = false }: TaskCreationProps) => {
+
+    const dispatch = useAppDispatch();
+    const [open, setOpen] = useState(false);
+    const [date, setDate] = useState<Date>()
+
+
+    /* ######################################################################################### */
 
     const { register, handleSubmit, getValues, formState: { errors }, setValue } = useForm<Partial<TaskCreationForm>>({
         defaultValues: {
-            status: defaultStatus
+            status: defaultData?.status,
+            title: defaultData?.title,
+            priority: defaultData?.priority,
+            deadline: defaultData?.deadline,
+            description: defaultData?.description,
         }
     });
 
@@ -72,12 +82,38 @@ const TaskCreation = ({ button = <Button variant="outline">Open</Button>, defaul
         }
     }
 
+    const handleUpdate = async (data: any) => {
+        try {
+            const response = await axios.patch(Urls.baseUrl + Urls.tasks + "/" + defaultData?._id, data);
+            if (response.status === 200) {
+                toast.success("Task updated successfully");
+                setOpen(false);
+                getTasks()
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error("Error updating task");
+        }
+    }
+
+    /* ######################################################################################### */
+
+
+    useEffect(() => {
+        if (defaultData?.deadline) {
+            setDate(defaultData.deadline)
+        }
+    }, [defaultData])
+
+
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 {button}
             </SheetTrigger>
             <SheetContent className='w-1/2'>
+                <SheetTitle></SheetTitle>
+                <SheetDescription></SheetDescription>
 
                 <div className='flex justify-between '>
                     <div>
@@ -97,14 +133,14 @@ const TaskCreation = ({ button = <Button variant="outline">Open</Button>, defaul
                         </Button>
                     </div>
                 </div>
-                <form onSubmit={handleSubmit(handleCreation)}>
-                    <div className='mt-7 text-[#666666]'>
-                        <Input required {...register("title")} className='border-0 text-5xl px-0 placeholder:text-[#CCCCCC] ' placeholder='Title' />
-                        <div className='grid grid-cols-2 w-2/3 items-center gap-2 mt-8 text-sm'>
+                <form onSubmit={handleSubmit(isEdit ? handleUpdate : handleCreation)}>
+                    <div className='mt-5 text-[#666666]'>
+                        <Input required {...register("title")} className='border-0 text-5xl py-10 px-0 placeholder:text-[#CCCCCC] ' placeholder='Title' />
+                        <div className='grid grid-cols-2 w-2/3 items-center gap-2 mt-5 text-sm'>
                             <div className='w-1/2 flex items-center gap-2'>
                                 <Sun className='size-4' />Status</div>
                             <div className='w-1/2'>
-                                <Select required value={getValues("status")} onValueChange={(value) => setValue("status", value)}>
+                                <Select required defaultValue={getValues("status")} onValueChange={(value) => setValue("status", value)}>
                                     <SelectTrigger className="w-[280px] placeholder:text-[#CCCCCC] text-xs">
                                         <SelectValue placeholder="Not Selected" />
                                     </SelectTrigger>
@@ -123,7 +159,7 @@ const TaskCreation = ({ button = <Button variant="outline">Open</Button>, defaul
                                 <OctagonAlert className='size-4' />Priority
                             </div>
                             <div>
-                                <Select onValueChange={(value) => setValue("priority", value)}>
+                                <Select defaultValue={getValues("priority")} onValueChange={(value) => setValue("priority", value)}>
                                     <SelectTrigger className="w-[280px] placeholder:text-[#CCCCCC] text-xs">
                                         <SelectValue placeholder="Not Selected" />
                                     </SelectTrigger>
@@ -140,10 +176,13 @@ const TaskCreation = ({ button = <Button variant="outline">Open</Button>, defaul
                                 <Calendar className='size-4' />Deadline
                             </div>
                             <div>
-                                <DatePicker date={date} setDate={(date: any) => {
-                                    setDate(date);
-                                    setValue("deadline", date);
-                                }} />
+                                <DatePicker
+                                    date={date}
+                                    setDate={(date: any) => {
+                                        setDate(date);
+                                        setValue("deadline", date);
+                                    }}
+                                />
                             </div>
                             <div className='align-top flex h-full gap-2 pt-2'>
                                 <PencilIcon className='size-4' /> Description

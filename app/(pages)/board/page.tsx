@@ -1,47 +1,20 @@
 
 import React from 'react'
 import Image from 'next/image';
-import { Input } from '@/app/_components/ui/input';
-import { Button } from '@/app/_components/ui/button';
 import {
     CirclePlus, CircleHelp, Sparkles,
     Calendar,
     Filter,
     Share2
 } from "lucide-react"
-import LayoutWrapper from '@/app/_components/layoutWrapper';
+
 import TaskCreation from './task-creation';
-import axios from 'axios';
-import Urls from '@/app/_utils/urls';
-import Greetings from '@/app/_components/greetings';
 import BoardWrapper from './board-wrapper';
+import { Input } from '@/app/_components/ui/input';
+import Greetings from '@/app/_components/greetings';
+import { Button } from '@/app/_components/ui/button';
+import LayoutWrapper from '@/app/_components/layoutWrapper';
 
-
-async function getData() {
-    try {
-        if (typeof window === 'undefined') {
-            // We're on the server side, so we can't use localStorage
-            console.log("Cannot access localStorage on server side");
-            return null;
-        }
-
-        const token = localStorage.getItem("workflow_token");
-        if (!token) {
-            console.log("No token found in localStorage");
-            return null;
-        }
-
-        const res = await axios.get(Urls.baseUrl + Urls.tasks, {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        });
-        return res;
-    } catch (error) {
-        console.log("error : ", error);
-        return null;
-    }
-}
 
 
 const Board = async () => {
