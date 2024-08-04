@@ -29,7 +29,7 @@ const Board = async () => {
                     <div className='text-base flex items-center gap-2'>Help & feedback <CircleHelp className='size-4' /></div>
                 </div>
 
-                <div className='ml-4 mr-8 flex flex-col md:flex-row gap-2'>
+                <div className='ml-4 mr-8 hidden md:flex md:flex-row gap-2'>
                     <div className='bg-white px-4 py-4 rounded-lg flex w-full items-center gap-5'>
                         <div className='w-1/4'>
                             <Image src='/assets/images/dash_board_1.svg' alt='tags' width={77} height={61} />

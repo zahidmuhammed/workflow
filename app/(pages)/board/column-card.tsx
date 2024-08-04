@@ -41,7 +41,7 @@ const ColumnCard = ({ column, tasks }: ColumnCardProps) => {
                 </div>
             </div>
 
-            <ScrollArea className="h-[calc(100vh-350px)]" showScrollBar={false} ref={ref}>
+            <ScrollArea className="h-[calc(100vh-220px)] md:h-[calc(100vh-350px)]" showScrollBar={false} ref={ref}>
                 <div className="flex flex-col py-2 gap-3">
                     {tasks.map((task: any) => (
                         <TaskCard key={task._id} task={task} />
