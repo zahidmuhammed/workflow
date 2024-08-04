@@ -53,7 +53,7 @@ const TaskCreation = ({ button = <Button variant="outline">Open</Button>, defaul
 
     /* ######################################################################################### */
 
-    const { register, handleSubmit, getValues, formState: { errors }, setValue } = useForm<Partial<TaskCreationForm>>({
+    const { register, handleSubmit, getValues, formState: { errors }, setValue, reset } = useForm<Partial<TaskCreationForm>>({
         defaultValues: {
             status: defaultData?.status,
             title: defaultData?.title,
@@ -74,6 +74,7 @@ const TaskCreation = ({ button = <Button variant="outline">Open</Button>, defaul
             if (response.status === 201) {
                 toast.success("Task created successfully");
                 setOpen(false);
+                reset();
                 getTasks()
             }
         } catch (error) {
@@ -88,6 +89,7 @@ const TaskCreation = ({ button = <Button variant="outline">Open</Button>, defaul
             if (response.status === 200) {
                 toast.success("Task updated successfully");
                 setOpen(false);
+                reset();
                 getTasks()
             }
         } catch (error) {
