@@ -26,7 +26,7 @@ const Board = async () => {
             <div className='bg-[#F7F7F7] flex flex-col gap-4 h-screen'>
                 <div className='flex items-center  justify-between mt-6 h-14 ml-4 mr-8'>
                     <Greetings />
-                    <div className='text-base flex items-center gap-2'>Help & feedback <CircleHelp className='size-4' /></div>
+                    <div className='text-base flex items-center gap-2'><span className='hidden md:flex'>Help & feedback </span><CircleHelp className='size-4' /></div>
                 </div>
 
                 <div className='ml-4 mr-8 hidden md:flex md:flex-row gap-2'>

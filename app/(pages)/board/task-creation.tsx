@@ -193,7 +193,7 @@ const TaskCreation = ({ button = <Button variant="outline">Open</Button>, defaul
                                 <Textarea className='w-[280px] border-0 placeholder:text-[#64758B] placeholder:text-xs ' placeholder='Not Selected' rows={1} {...register("description")} />
                             </div>
                         </div>
-                        <Button variant={"ghost"} className='flex items-center gap-2 text-xs'>
+                        <Button type='button' variant={"ghost"} className='flex items-center gap-2 text-xs'>
                             <PlusIcon className='h-4 w-4' />
                             Add Custom property
                         </Button>
