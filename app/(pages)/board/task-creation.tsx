@@ -113,7 +113,7 @@ const TaskCreation = ({ button = <Button variant="outline">Open</Button>, defaul
             <SheetTrigger asChild>
                 {button}
             </SheetTrigger>
-            <SheetContent className='w-1/2'>
+            <SheetContent className='w-full md:w-1/2'>
                 <SheetTitle></SheetTitle>
                 <SheetDescription></SheetDescription>
 

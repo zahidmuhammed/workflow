@@ -32,7 +32,7 @@ const Greetings = () => {
     }
 
     return (
-        <div className='text-4xl font-semibold'  >{getMessage()}, {isClient && name}!</div>
+        <div className='text-xl sm:text-2xl md:text-4xl font-semibold'  >{getMessage()}, {isClient && name}!</div>
     )
 }
 

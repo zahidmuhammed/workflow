@@ -29,7 +29,7 @@ const Board = async () => {
                     <div className='text-base flex items-center gap-2'>Help & feedback <CircleHelp className='size-4' /></div>
                 </div>
 
-                <div className='ml-4 mr-8 flex gap-2'>
+                <div className='ml-4 mr-8 flex flex-col md:flex-row gap-2'>
                     <div className='bg-white px-4 py-4 rounded-lg flex w-full items-center gap-5'>
                         <div className='w-1/4'>
                             <Image src='/assets/images/dash_board_1.svg' alt='tags' width={77} height={61} />
@@ -60,20 +60,20 @@ const Board = async () => {
                 </div>
 
                 <div className='flex justify-between items-center ml-4 mr-8 '>
-                    <div className='flex w-1/3'>
-                        <Input placeholder='Search' className='w-1/2 text-[#797979]' />
+                    <div className='flex w-full xl:w-1/3'>
+                        <Input placeholder='Search' className='w-full xl:w-1/2 text-[#797979]' />
                     </div>
                     <div className='flex flex-1 w-2/3 space-x-2'>
-                        <Button variant={"secondary"} className='w-full text-[#797979] bg-[#F4F4F4]'>
+                        <Button variant={"secondary"} className='w-full text-[#797979] bg-[#F4F4F4]  hidden xl:flex'>
                             Calendar view <Calendar className='ml-2 size-4' />
                         </Button>
-                        <Button variant={"secondary"} className='w-full text-[#797979] bg-[#F4F4F4]'>
+                        <Button variant={"secondary"} className='w-full text-[#797979] bg-[#F4F4F4] hidden xl:flex'>
                             Automation <Sparkles className='ml-2 size-4' />
                         </Button>
-                        <Button variant={"secondary"} className='w-full text-[#797979] bg-[#F4F4F4]'>
+                        <Button variant={"secondary"} className='w-full text-[#797979] bg-[#F4F4F4] hidden md:flex'>
                             Filter <Filter className='ml-1 size-4' />
                         </Button>
-                        <Button variant={"secondary"} className='w-full text-[#797979]  bg-[#F4F4F4]'>
+                        <Button variant={"secondary"} className='w-full text-[#797979]  bg-[#F4F4F4] hidden md:flex'>
                             Share <Share2 className='ml-1 size-4' />
                         </Button>
 
